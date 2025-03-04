@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  kafka:
+    image: registry.redhat.io/amq-streams/kafka-37-rhel9:2.8.0
+    container_name: kafka
+    command: >
+      sh -c "bin/kafka-server-start.sh config/kraft/server.properties"
+    ports:
+      - "9092:9092" # Broker
+      - "9093:9093" # Controller
+    volumes:
+      - ./kafka-config/kraft:/opt/kafka/config/kraft:Z
+      - ./kafka-data:/var/lib/kafka/data:Z
+    environment:
+      - LOG_DIR=/tmp/kafka-logs
+      - KAFKA_NODE_ID=1
+      - KAFKA_PROCESS_ROLES=broker,controller
+      - KAFKA_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - KAFKA_CONTROLLER_QUORUM_VOTERS-1@localhost:9093
+    networks:
+      - kafka-network
+
+networks:
+  kafka-network:
+    driver: bridge
