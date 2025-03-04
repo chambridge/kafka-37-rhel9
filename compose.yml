@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: registry.redhat.io/amq-streams/kafka-37-rhel9:2.8.0
+    container_name: zookeeper
+    command: >
+      sh -c "bin/zookeeper-server-start.sh config/zookeeper.properties"
+    ports:
+      - "2181:2181"
+    volumes:
+      - ./zookeeper-config/zookeeper.properties:/opt/kafka/config/zookeeper.properties
+    environment:
+      - LOG_DIR=/tmp/zookeeper-logs
+    networks:
+      - kafka-network
+
+  kafka:
+    image: registry.redhat.io/amq-streams/kafka-37-rhel9:2.8.0
+    container_name: kafka
+    command: >
+      sh -c "bin/kafka-server-start.sh config/server.properties"
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./kafka-config/server.properties:/opt/kafka/config/server.properties
+    environment:
+      - LOG_DIR=/tmp/kafka-logs
+    networks:
+      - kafka-network
+
+networks:
+  kafka-network:
+    driver: bridge

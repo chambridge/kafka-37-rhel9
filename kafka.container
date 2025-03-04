@@ -1,0 +1,12 @@
+[Unit]
+Requires=zookeeper.service
+After=zookeeper.service
+
+[Container]
+ContainerName=kafka
+Environment=LOG_DIR=/tmp/kafka-logs
+Exec=sh -c 'bin/kafka-server-start.sh config/server.properties'
+Image=registry.redhat.io/amq-streams/kafka-37-rhel9:2.8.0
+Network=kafka-network
+PublishPort=9092:9092
+Volume=./kafka-config/server.properties:/opt/kafka/config/server.properties
