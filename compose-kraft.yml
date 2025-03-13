@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   kafka:
-    image: registry.redhat.io/amq-streams/kafka-37-rhel9:2.8.0
+    image: registry.redhat.io/amq-streams/kafka-39-rhel9:2.9.0
     container_name: kafka
     command: >
       sh -c "bin/kafka-server-start.sh config/kraft/server.properties"
