@@ -76,7 +76,7 @@ If you are familiar with compose files you can find the definition of the contai
 Run the following command to initialize the KRaft setup:
 
 ```
-podman run --rm -it -v ./kafka-config/kraft:/opt/kafka/config/kraft:Z -v ./kafka-data:/var/lib/kafka/data:Z registry.redhat.io/amq-streams/kafka-37-rhel9:2.8.0 bash -c "bin/kafka-storage.sh format -t 23da142e-8175-4b5d-b3aa-fa307f12a8c2 -c config/kraft/server.properties"
+podman run --rm -it -v ./kafka-config/kraft:/opt/kafka/config/kraft:Z -v ./kafka-data:/var/lib/kafka/data:Z registry.redhat.io/amq-streams/kafka-39-rhel9:2.9.0 bash -c "bin/kafka-storage.sh format -t 23da142e-8175-4b5d-b3aa-fa307f12a8c2 -c config/kraft/server.properties"
 ```
 
 The UUID can be replaced with any UUID, the `bin/kafka-storage.sh random-uuid` command can also be used to generate this value.
