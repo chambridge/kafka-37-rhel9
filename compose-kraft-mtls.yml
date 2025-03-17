@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  kafka:
+    image: registry.redhat.io/amq-streams/kafka-39-rhel9:2.9.0
+    container_name: kafka-mtls
+    # user: "${UID}:${GID}" # Necessary for macOS users 
+    command: >
+      sh -c "bin/kafka-server-start.sh config/kraft/server.properties"
+    ports:
+      - "9092:9092" # Broker
+    volumes:
+      - ./kafka-config/kraft-mtls:/opt/kafka/config/kraft:Z
+      - ./certs:/opt/kafka/config/certs:Z
+      - ./kafka-data:/var/lib/kafka/data:Z
+      - ./mtls-config.properties:/tmp/mtls-config.properties:Z
+    environment:
+      - LOG_DIR=/tmp/kafka-logs
+      - KAFKA_NODE_ID=1
+      - KAFKA_PROCESS_ROLES=broker,controller
+      - KAFKA_LISTENERS=SSL://:9092,CONTROLLER://:9093
+      - KAFKA_ADVERTISED_LISTENERS=SSL://localhost:9092
+      - KAFKA_CONTROLLER_QUORUM_VOTERS-1@localhost:9093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=SSL
+    networks:
+      - kafka-network
+
+networks:
+  kafka-network:
+    driver: bridge
